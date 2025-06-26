@@ -1,0 +1,58 @@
+
+body {
+  margin: 0;
+  padding: 0;
+  background: #f5f7fa;
+  font-family: Arial, sans-serif;
+}
+
+a {
+  transition: color 0.2s;
+}
+
+a:hover {
+  color: #90caf9;
+}
+
+button {
+  transition: background 0.2s, color 0.2s;
+}
+
+button:hover {
+  background: #1565c0;
+}
+
+section {
+  margin-bottom: 2rem;
+}
+
+footer {
+  font-size: 0.95rem;
+}
+/* Add to App.css */
+.auth-container {
+  max-width: 400px;
+  margin: 3rem auto;
+  background: #fff;
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px #ccc;
+}
+
+.auth-form input {
+  width: 100%;
+  margin-bottom: 12px;
+  padding: 8px;
+  box-sizing: border-box;
+}
+
+.auth-form button {
+  width: 100%;
+  padding: 10px;
+  background: #1976d2;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  font-size: 1rem;
+  cursor: pointer;
+}
