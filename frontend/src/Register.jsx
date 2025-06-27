@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom"; // Add this import
+import { toast } from "react-toastify"; // Import toast
 
 const Register = () => {
   const [form, setForm] = useState({
@@ -18,10 +19,38 @@ const Register = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (form.password !== form.confirmPassword) {
-      setMessage("Passwords do not match!");
+
+    // Name validation
+    if (!form.name || form.name.length < 2) {
+      toast.error("Please enter your full name.");
       return;
     }
+
+    // Email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(form.email)) {
+      toast.error("Please enter a valid email address.");
+      return;
+    }
+
+    // Password validation
+    if (!form.password || form.password.length < 6) {
+      toast.error("Password must be at least 6 characters.");
+      return;
+    }
+
+    // Password confirmation
+    if (form.password !== form.confirmPassword) {
+      toast.error("Passwords do not match.");
+      return;
+    }
+
+    // Role validation
+    if (!form.role) {
+      toast.error("Please select a role.");
+      return;
+    }
+
     try {
       const res = await fetch("http://localhost:5000/api/register", {
         method: "POST",

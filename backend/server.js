@@ -53,5 +53,92 @@ app.post('/api/login', (req, res) => {
   );
 });
 
+app.post('/api/appointments', (req, res) => {
+  const { date, time, doctor, reason, user_id } = req.body;
+  if (!date || !time || !doctor || !reason || !user_id) {
+    return res.status(400).json({ error: 'All fields are required' });
+  }
+  db.query(
+    'INSERT INTO appointments (date, time, doctor, reason, user_id) VALUES (?, ?, ?, ?, ?)',
+    [date, time, doctor, reason, user_id],
+    (err, result) => {
+      if (err) {
+        console.error(err);
+        return res.status(500).json({ error: 'Database error' });
+      }
+      // Return the newly created appointment
+      db.query(
+        'SELECT * FROM appointments WHERE id = ?',
+        [result.insertId],
+        (err2, rows) => {
+          if (err2) {
+            console.error(err2);
+            return res.status(500).json({ error: 'Database error' });
+          }
+          res.json({ message: 'Appointment booked!', appointment: rows[0] });
+        }
+      );
+    }
+  );
+});
+
+// Update or create patient profile
+app.post('/api/profile', (req, res) => {
+  const { user_id, name, age, address, phone, gender } = req.body;
+  if (!user_id || !name || !age || !address || !phone || !gender) {
+    return res.status(400).json({ error: 'All fields are required' });
+  }
+  // Upsert logic: update if exists, else insert
+  db.query(
+    `INSERT INTO profiles (user_id, name, age, address, phone, gender)
+     VALUES (?, ?, ?, ?, ?, ?)
+     ON DUPLICATE KEY UPDATE name=?, age=?, address=?, phone=?, gender=?`,
+    [user_id, name, age, address, phone, gender, name, age, address, phone, gender],
+    (err, result) => {
+      if (err) {
+        console.error(err);
+        return res.status(500).json({ error: 'Database error' });
+      }
+      res.json({ message: 'Profile saved!' });
+    }
+  );
+});
+
+app.get('/api/appointments', (req, res) => {
+  const { user_id } = req.query;
+  if (!user_id) {
+    return res.status(400).json({ error: 'User ID is required' });
+  }
+  db.query(
+    'SELECT * FROM appointments WHERE user_id = ? ORDER BY date, time',
+    [user_id],
+    (err, results) => {
+      if (err) {
+        console.error(err);
+        return res.status(500).json({ error: 'Database error' });
+      }
+      res.json(results);
+    }
+  );
+});
+
+app.delete('/api/appointments/:id', (req, res) => {
+  const { id } = req.params;
+  db.query(
+    'DELETE FROM appointments WHERE id = ?',
+    [id],
+    (err, result) => {
+      if (err) {
+        console.error(err);
+        return res.status(500).json({ error: 'Database error' });
+      }
+      if (result.affectedRows === 0) {
+        return res.status(404).json({ error: 'Appointment not found' });
+      }
+      res.json({ message: 'Appointment cancelled.' });
+    }
+  );
+});
+
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

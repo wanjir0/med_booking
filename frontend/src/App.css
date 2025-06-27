@@ -1,4 +1,118 @@
 
+
+/*for the home page*/
+.home-root {
+  font-family: Arial, sans-serif;
+}
+
+.home-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+  background: #1976d2;
+  color: #fff;
+}
+
+.home-logo {
+  font-weight: bold;
+  font-size: 1.5rem;
+}
+
+.home-nav-link {
+  color: #fff;
+  margin: 0 1rem;
+  text-decoration: none;
+}
+
+.home-hero {
+  padding: 3rem 2rem;
+  background: #e3f2fd;
+  text-align: center;
+}
+
+.home-cards {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  margin-top: 2rem;
+  flex-wrap: wrap;
+}
+
+.home-card {
+  background: #fff;
+  padding: 2rem 1.5rem;
+  border-radius: 10px;
+  box-shadow: 0 2px 12px #b3c6e0;
+  width: 250px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.home-card-emoji {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+}
+
+.home-card-btn {
+  margin-top: 1rem;
+  padding: 0.7rem 1.5rem;
+  background: #1976d2;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+.home-doctors {
+  padding: 2rem 2rem;
+}
+
+.home-doctors h2 {
+  text-align: center;
+}
+
+.home-doctors-list {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  margin-top: 1.5rem;
+}
+
+.home-doctor-card {
+  background: #fff;
+  padding: 1rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px #ccc;
+  width: 200px;
+  text-align: center;
+}
+
+.home-doctor-img {
+  width: 100%;
+  border-radius: 50%;
+}
+
+.home-footer {
+  background: #1976d2;
+  color: #fff;
+  text-align: center;
+  padding: 1.5rem 2rem;
+  margin-top: 2rem;
+}
+
+.home-footer-links {
+  margin-top: 0.5rem;
+}
+
+.home-footer-link {
+  color: #fff;
+  text-decoration: underline;
+  margin-right: 1rem;
+}
+
 body {
   margin: 0;
   padding: 0;
@@ -29,7 +143,7 @@ section {
 footer {
   font-size: 0.95rem;
 }
-/* Add to App.css */
+/*for login na registration*/
 .auth-container {
   max-width: 400px;
   margin: 3rem auto;
@@ -51,8 +165,173 @@ footer {
   padding: 10px;
   background: #1976d2;
   color: #fff;
-  border: none;
+  border: none; 
+}
+  /*patient dashboard css*/
+.dashboard-container {
+  display: flex;
+  min-height: 100vh;
+}
+
+.dashboard-sidebar {
+  width: 220px;
+  background: #1976d2;
+  color: #fff;
+  padding: 2rem 1rem;
+}
+
+.sidebar-title {
+  margin-bottom: 2rem;
+  font-size: 1.3rem;
+  font-weight: bold;
+}
+
+.dashboard-sidebar ul {
+  list-style: none;
+  padding: 0;
+}
+
+.dashboard-sidebar li {
+  padding: 0.8rem 1rem;
+  cursor: pointer;
   border-radius: 4px;
+  margin-bottom: 0.5rem;
+  transition: background 0.2s;
+}
+
+.dashboard-sidebar li.active,
+.dashboard-sidebar li:hover {
+  background: #1565c0;
+}
+
+.dashboard-main {
+  flex: 1;
+  padding: 2rem;
+  background: #f5f7fa;
+}
+
+.welcome-card {
+  background: #fff;
+  padding: 2rem;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px #ccc;
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.book-btn {
+  margin-top: 1rem;
+  padding: 0.7rem 1.5rem;
+  background: #1976d2;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
   font-size: 1rem;
   cursor: pointer;
+  transition: background 0.2s;
+}
+
+.book-btn:hover {
+  background: #1565c0;
+}
+
+.booking-form {
+  background: #fff;
+  padding: 2rem;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px #ccc;
+  max-width: 400px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.booking-form label {
+  display: flex;
+  flex-direction: column;
+  font-weight: bold;
+  color: #1976d2;
+}
+
+.booking-form input,
+.booking-form textarea {
+  margin-top: 0.5rem;
+  padding: 0.5rem;
+  border-radius: 4px;
+  border: 1px solid #b3c6e0;
+  font-size: 1rem;
+}
+
+.profile-form {
+  background: #fff;
+  padding: 2rem;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px #ccc;
+  max-width: 400px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.profile-form label {
+  display: flex;
+  flex-direction: column;
+  font-weight: bold;
+  color: #1976d2;
+}
+
+.profile-form input,
+.profile-form select {
+  margin-top: 0.5rem;
+  padding: 0.5rem;
+  border-radius: 4px;
+  border: 1px solid #b3c6e0;
+  font-size: 1rem;
+}
+
+/* Upcoming Appointments List */
+.appointments-list {
+  background: #fff;
+  padding: 1.5rem 2rem;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px #ccc;
+  max-width: 600px;
+  margin: 0 auto 2rem auto;
+}
+
+.appointments-list ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.appointments-list li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 0;
+  border-bottom: 1px solid #e0e0e0;
+  font-size: 1.05rem;
+}
+
+.appointments-list li:last-child {
+  border-bottom: none;
+}
+
+.cancel-btn {
+  background: #e53935;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  padding: 0.4rem 1rem;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: background 0.2s;
+  margin-left: 1rem;
+}
+
+.cancel-btn:hover {
+  background: #b71c1c;
 }

@@ -12,6 +12,20 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // Basic email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(form.email)) {
+      toast.error("Please enter a valid email address.");
+      return;
+    }
+
+    // Password validation
+    if (!form.password || form.password.length < 6) {
+      toast.error("Password must be at least 6 characters.");
+      return;
+    }
+
     try {
       const res = await fetch("http://localhost:5000/api/login", {
         method: "POST",
@@ -20,9 +34,19 @@ const Login = () => {
       });
       const data = await res.json();
       if (res.ok) {
+        // Save user to localStorage
+        localStorage.setItem("user", JSON.stringify(data.user));
         toast.success("Login successful!");
         setTimeout(() => {
-          navigate("/");
+          if (data.user.role === "patient") {
+            navigate("/patient-dashboard");
+          } else if (data.user.role === "doctor") {
+            navigate("/doctor-dashboard");
+          } else if (data.user.role === "admin") {
+            navigate("/admin-dashboard");
+          } else {
+            navigate("/");
+          }
         }, 1000);
       } else {
         toast.error(data.error || "Login failed!");

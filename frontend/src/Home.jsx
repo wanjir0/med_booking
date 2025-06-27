@@ -1,67 +1,62 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
+
 const Home = () => (
-  <div style={{ fontFamily: "Arial, sans-serif" }}>
+  <div className="home-root">
     {/* Header */}
-    <header style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "1rem 2rem", background: "#1976d2", color: "#fff" }}>
-      <div style={{ fontWeight: "bold", fontSize: "1.5rem" }}>MediBook</div>
+    <header className="home-header">
+      <div className="home-logo">MediBook</div>
       <nav>
-        <Link to="/about" style={{ color: "#fff", margin: "0 1rem", textDecoration: "none" }}>About</Link>
-        <Link to="/contact" style={{ color: "#fff", margin: "0 1rem", textDecoration: "none" }}>Contact</Link>
-        <Link to="/register" style={{ color: "#fff", margin: "0 1rem", textDecoration: "none" }}>Register</Link>
-        <Link to="/login" style={{ color: "#fff", margin: "0 1rem", textDecoration: "none" }}>Login</Link>
+        <Link to="/about" className="home-nav-link">About</Link>
+        <Link to="/contact" className="home-nav-link">Contact</Link>
+        <Link to="/register" className="home-nav-link">Register</Link>
+        <Link to="/login" className="home-nav-link">Login</Link>
       </nav>
     </header>
 
     {/* Hero Section */}
-    <section style={{ padding: "3rem 2rem", background: "#e3f2fd", textAlign: "center" }}>
+    <section className="home-hero">
       <h1>Book a Medical Appointment Easily</h1>
       <p>Find top doctors and schedule your appointment in minutes.</p>
-      <div style={{ display: "flex", justifyContent: "center", gap: "2rem", marginTop: "2rem", flexWrap: "wrap" }}>
-        <div style={{ background: "#fff", padding: "2rem 1.5rem", borderRadius: "10px", boxShadow: "0 2px 12px #b3c6e0", width: "250px", display: "flex", flexDirection: "column", alignItems: "center" }}>
-          <span role="img" aria-label="appointment" style={{ fontSize: "2.5rem", marginBottom: "1rem" }}>📅</span>
+      <div className="home-cards">
+        <div className="home-card">
+          <span role="img" aria-label="appointment" className="home-card-emoji">📅</span>
           <h3>Book Appointment</h3>
           <p>Schedule a visit with a specialist in just a few clicks.</p>
-          <button style={{ marginTop: "1rem", padding: "0.7rem 1.5rem", background: "#1976d2", color: "#fff", border: "none", borderRadius: "5px", fontSize: "1rem", cursor: "pointer" }}>
-            Book Now
-          </button>
+          <button className="home-card-btn">Book Now</button>
         </div>
-        <div style={{ background: "#fff", padding: "2rem 1.5rem", borderRadius: "10px", boxShadow: "0 2px 12px #b3c6e0", width: "250px", display: "flex", flexDirection: "column", alignItems: "center" }}>
-          <span role="img" aria-label="doctors" style={{ fontSize: "2.5rem", marginBottom: "1rem" }}>👨‍⚕️</span>
+        <div className="home-card">
+          <span role="img" aria-label="doctors" className="home-card-emoji">👨‍⚕️</span>
           <h3>Top Doctors</h3>
           <p>Browse our list of highly rated medical professionals.</p>
-          <button style={{ marginTop: "1rem", padding: "0.7rem 1.5rem", background: "#1976d2", color: "#fff", border: "none", borderRadius: "5px", fontSize: "1rem", cursor: "pointer" }}>
-            View Doctors
-          </button>
+          <button className="home-card-btn">View Doctors</button>
         </div>
-        <div style={{ background: "#fff", padding: "2rem 1.5rem", borderRadius: "10px", boxShadow: "0 2px 12px #b3c6e0", width: "250px", display: "flex", flexDirection: "column", alignItems: "center" }}>
-          <span role="img" aria-label="support" style={{ fontSize: "2.5rem", marginBottom: "1rem" }}>💬</span>
+        <div className="home-card">
+          <span role="img" aria-label="support" className="home-card-emoji">💬</span>
           <h3>Contact Support</h3>
           <p>Need help? Reach out to our support team anytime.</p>
-          <button style={{ marginTop: "1rem", padding: "0.7rem 1.5rem", background: "#1976d2", color: "#fff", border: "none", borderRadius: "5px", fontSize: "1rem", cursor: "pointer" }}>
-            Contact Us
-          </button>
+          <button className="home-card-btn">Contact Us</button>
         </div>
       </div>
     </section>
 
     {/* Top Doctors */}
-    <section style={{ padding: "2rem 2rem" }}>
-      <h2 style={{ textAlign: "center" }}>Top Doctors</h2>
-      <div style={{ display: "flex", justifyContent: "center", gap: "2rem", marginTop: "1.5rem" }}>
-        <div style={{ background: "#fff", padding: "1rem", borderRadius: "8px", boxShadow: "0 2px 8px #ccc", width: "200px" }}>
-          <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Dr. John Doe" style={{ width: "100%", borderRadius: "50%" }} />
+    <section className="home-doctors">
+      <h2>Top Doctors</h2>
+      <div className="home-doctors-list">
+        <div className="home-doctor-card">
+          <img src="https://randomuser.me/api/portraits/men/47.jpg" alt="Dr. John Doe" className="home-doctor-img" />
           <h3>Dr. John Doe</h3>
           <p>Cardiologist</p>
         </div>
-        <div style={{ background: "#fff", padding: "1rem", borderRadius: "8px", boxShadow: "0 2px 8px #ccc", width: "200px" }}>
-          <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="Dr. Jane Smith" style={{ width: "100%", borderRadius: "50%" }} />
+        <div className="home-doctor-card">
+          <img src="https://randomuser.me/api/portraits/women/52.jpg" alt="Dr. Jane Smith" className="home-doctor-img" />
           <h3>Dr. Jane Smith</h3>
           <p>Pediatrician</p>
         </div>
-        <div style={{ background: "#fff", padding: "1rem", borderRadius: "8px", boxShadow: "0 2px 8px #ccc", width: "200px" }}>
-          <img src="https://randomuser.me/api/portraits/men/54.jpg" alt="Dr. Mike Lee" style={{ width: "100%", borderRadius: "50%" }} />
+        <div className="home-doctor-card">
+          <img src="https://randomuser.me/api/portraits/men/43.jpg" alt="Dr. Mike Lee" className="home-doctor-img" />
           <h3>Dr. Mike Lee</h3>
           <p>Dermatologist</p>
         </div>
@@ -69,11 +64,11 @@ const Home = () => (
     </section>
 
     {/* Footer */}
-    <footer style={{ background: "#1976d2", color: "#fff", textAlign: "center", padding: "1.5rem 2rem", marginTop: "2rem" }}>
+    <footer className="home-footer">
       <div>MediBook &copy; {new Date().getFullYear()} | All rights reserved.</div>
-      <div style={{ marginTop: "0.5rem" }}>
-        <a href="#privacy" style={{ color: "#fff", textDecoration: "underline", marginRight: "1rem" }}>Privacy Policy</a>
-        <a href="#terms" style={{ color: "#fff", textDecoration: "underline" }}>Terms of Service</a>
+      <div className="home-footer-links">
+        <a href="#privacy" className="home-footer-link">Privacy Policy</a>
+        <a href="#terms" className="home-footer-link">Terms of Service</a>
       </div>
     </footer>
   </div>
