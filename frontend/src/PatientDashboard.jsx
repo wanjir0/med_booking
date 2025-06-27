@@ -10,18 +10,17 @@ const PatientDashboard = () => {
     reason: "",
   });
   const [appointments, setAppointments] = useState([]);
-
-  // Profile state
-  const [profile, setProfile] = useState({
-    name: "",
-    age: "",
-    address: "",
-    phone: "",
+  const [patients, setPatients] = useState([]);
+  const [patientProfile, setPatientProfile] = useState({
+    date_of_birth: "",
     gender: "",
+    address: "",
+    medical_history: "",
+    emergency_contact: "",
   });
-  const [editingProfile, setEditingProfile] = useState(false);
+  const [profileMsg, setProfileMsg] = useState("");
 
-  // Fetch appointments when component mounts or after booking/cancelling
+  // Fetch appointments and patients on mount or tab change
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem("user"));
     if (user && user.id) {
@@ -29,8 +28,25 @@ const PatientDashboard = () => {
         .then((res) => res.json())
         .then((data) => setAppointments(data))
         .catch(() => setAppointments([]));
+
+      fetch(`http://localhost:5000/api/patients?user_id=${user.id}`)
+        .then((res) => res.json())
+        .then((data) => setPatients(data))
+        .catch(() => setPatients([]));
     }
-  }, [activeTab]); // re-fetch when switching to appointments tab
+  }, [activeTab]);
+
+  // Fetch existing patient profile when Profile tab is active
+  useEffect(() => {
+    const user = JSON.parse(localStorage.getItem("user"));
+    if (activeTab === "profile" && user && user.id) {
+      fetch(`http://localhost:5000/api/patient/profile?user_id=${user.id}`)
+        .then((res) => res.json())
+        .then((data) => {
+          if (data && Object.keys(data).length > 0) setPatientProfile(data);
+        });
+    }
+  }, [activeTab]);
 
   const handleBookingChange = (e) => {
     setBooking({ ...booking, [e.target.name]: e.target.value });
@@ -43,6 +59,7 @@ const PatientDashboard = () => {
       toast.error("User not logged in.");
       return;
     }
+    // Send doctor as name (string), not doctor_id
     const bookingData = { ...booking, user_id: user.id };
     try {
       const res = await fetch("http://localhost:5000/api/appointments", {
@@ -54,7 +71,6 @@ const PatientDashboard = () => {
       if (res.ok) {
         toast.success("Appointment booked!");
         setBooking({ date: "", time: "", doctor: "", reason: "" });
-        // Refresh appointments
         setAppointments((prev) => [...prev, data.appointment]);
         setActiveTab("appointments");
       } else {
@@ -84,35 +100,28 @@ const PatientDashboard = () => {
     }
   };
 
-  // Profile handlers
-  const handleProfileChange = (e) => {
-    setProfile({ ...profile, [e.target.name]: e.target.value });
+  const handlePatientProfileChange = (e) => {
+    setPatientProfile({ ...patientProfile, [e.target.name]: e.target.value });
   };
 
-  const handleEditProfile = () => setEditingProfile(true);
-
-  const handleSaveProfile = async (e) => {
+  const handlePatientProfileSubmit = async (e) => {
     e.preventDefault();
     const user = JSON.parse(localStorage.getItem("user"));
     if (!user || !user.id) {
-      alert("User not logged in.");
+      setProfileMsg("User not logged in.");
       return;
     }
     try {
-      const res = await fetch("http://localhost:5000/api/profile", {
+      const res = await fetch("http://localhost:5000/api/patient/profile", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...profile, user_id: user.id }),
+        body: JSON.stringify({ ...patientProfile, user_id: user.id }),
       });
       const data = await res.json();
-      if (res.ok) {
-        alert("Profile saved!");
-        setEditingProfile(false);
-      } else {
-        alert(data.error || "Profile save failed.");
-      }
-    } catch (err) {
-      alert("Server error.");
+      if (res.ok) setProfileMsg("Profile saved!");
+      else setProfileMsg(data.error || "Profile save failed.");
+    } catch {
+      setProfileMsg("Server error.");
     }
   };
 
@@ -193,49 +202,15 @@ const PatientDashboard = () => {
 
         {activeTab === "profile" && (
           <div>
-            <h2>Your Profile</h2>
-            <form className="profile-form" onSubmit={handleSaveProfile}>
+            <h2>Your Patient Profile</h2>
+            <form className="profile-form" onSubmit={handlePatientProfileSubmit}>
               <label>
-                Name:
+                Date of Birth:
                 <input
-                  type="text"
-                  name="name"
-                  value={profile.name}
-                  onChange={handleProfileChange}
-                  disabled={!editingProfile}
-                  required
-                />
-              </label>
-              <label>
-                Age:
-                <input
-                  type="number"
-                  name="age"
-                  value={profile.age}
-                  onChange={handleProfileChange}
-                  disabled={!editingProfile}
-                  required
-                />
-              </label>
-              <label>
-                Address:
-                <input
-                  type="text"
-                  name="address"
-                  value={profile.address}
-                  onChange={handleProfileChange}
-                  disabled={!editingProfile}
-                  required
-                />
-              </label>
-              <label>
-                Phone Number:
-                <input
-                  type="tel"
-                  name="phone"
-                  value={profile.phone}
-                  onChange={handleProfileChange}
-                  disabled={!editingProfile}
+                  type="date"
+                  name="date_of_birth"
+                  value={patientProfile.date_of_birth}
+                  onChange={handlePatientProfileChange}
                   required
                 />
               </label>
@@ -243,9 +218,8 @@ const PatientDashboard = () => {
                 Gender:
                 <select
                   name="gender"
-                  value={profile.gender}
-                  onChange={handleProfileChange}
-                  disabled={!editingProfile}
+                  value={patientProfile.gender}
+                  onChange={handlePatientProfileChange}
                   required
                 >
                   <option value="">Select Gender</option>
@@ -254,13 +228,37 @@ const PatientDashboard = () => {
                   <option value="other">Other</option>
                 </select>
               </label>
-              {editingProfile ? (
-                <button type="submit" className="book-btn">Save</button>
-              ) : (
-                <button type="button" className="book-btn" onClick={handleEditProfile}>
-                  Edit
-                </button>
-              )}
+              <label>
+                Address:
+                <input
+                  type="text"
+                  name="address"
+                  value={patientProfile.address}
+                  onChange={handlePatientProfileChange}
+                  required
+                />
+              </label>
+              <label>
+                Medical History:
+                <textarea
+                  name="medical_history"
+                  value={patientProfile.medical_history}
+                  onChange={handlePatientProfileChange}
+                ></textarea>
+              </label>
+              <label>
+                Emergency Contact:
+                <input
+                  type="text"
+                  name="emergency_contact"
+                  value={patientProfile.emergency_contact}
+                  onChange={handlePatientProfileChange}
+                />
+              </label>
+              <button type="submit" className="book-btn">
+                Save Profile
+              </button>
+              {profileMsg && <p>{profileMsg}</p>}
             </form>
           </div>
         )}
@@ -308,10 +306,31 @@ const PatientDashboard = () => {
                   value={booking.reason}
                   onChange={handleBookingChange}
                   required
-                />
+                ></textarea>
               </label>
-              <button type="submit" className="book-btn">Book Appointment</button>
+              <button type="submit" className="book-btn">
+                Book Appointment
+              </button>
             </form>
+          </div>
+        )}
+
+        {activeTab === "patients" && (
+          <div>
+            <h2>Patients List</h2>
+            {Array.isArray(patients) && patients.length === 0 ? (
+              <p>No patient records found.</p>
+            ) : Array.isArray(patients) ? (
+              <ul>
+                {patients.map((p) => (
+                  <li key={p.id}>
+                    {p.name} - {p.email} - {p.phone}
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p>Loading...</p>
+            )}
           </div>
         )}
       </main>

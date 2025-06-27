@@ -6,6 +6,7 @@ import Login from "./Login";
 import {ToastContainer} from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import PatientDashboard from "./PatientDashboard";
+import DoctorDashboard from "./DoctorDashboard";
 import "./App.css";
 
 function App() {
@@ -16,6 +17,7 @@ function App() {
       <Route path="/register" element={<Register />} />
       <Route path="/login" element={<Login />} />
       <Route path="/patient-dashboard" element={<PatientDashboard />} />
+       < Route path="/doctor-dashboard" element={<DoctorDashboard />} />
     </Routes>
     <ToastContainer position="top-right"autoClose={3000}/>
     </>
