@@ -6,11 +6,12 @@ const PatientDashboard = () => {
   const [booking, setBooking] = useState({
     date: "",
     time: "",
-    doctor: "",
+    doctor_id: "",
     reason: "",
   });
   const [appointments, setAppointments] = useState([]);
   const [patients, setPatients] = useState([]);
+  const [doctors, setDoctors] = useState([]);
   const [patientProfile, setPatientProfile] = useState({
     date_of_birth: "",
     gender: "",
@@ -19,6 +20,14 @@ const PatientDashboard = () => {
     emergency_contact: "",
   });
   const [profileMsg, setProfileMsg] = useState("");
+
+  // Fetch doctors for dropdown
+  useEffect(() => {
+    fetch("http://localhost:5000/api/doctors")
+      .then((res) => res.json())
+      .then((data) => setDoctors(Array.isArray(data) ? data : []))
+      .catch(() => setDoctors([]));
+  }, []);
 
   // Fetch appointments and patients on mount or tab change
   useEffect(() => {
@@ -59,7 +68,7 @@ const PatientDashboard = () => {
       toast.error("User not logged in.");
       return;
     }
-    // Send doctor as name (string), not doctor_id
+    // Send doctor_id, not doctor name
     const bookingData = { ...booking, user_id: user.id };
     try {
       const res = await fetch("http://localhost:5000/api/appointments", {
@@ -70,7 +79,7 @@ const PatientDashboard = () => {
       const data = await res.json();
       if (res.ok) {
         toast.success("Appointment booked!");
-        setBooking({ date: "", time: "", doctor: "", reason: "" });
+        setBooking({ date: "", time: "", doctor_id: "", reason: "" });
         setAppointments((prev) => [...prev, data.appointment]);
         setActiveTab("appointments");
       } else {
@@ -184,8 +193,10 @@ const PatientDashboard = () => {
               <ul>
                 {appointments.map((app) => (
                   <li key={app.id}>
-                    <span>
-                      {app.date} {app.time} with Dr. {app.doctor} - {app.reason}
+                    <span className="appointment-info">
+                      <span className="icon">📅</span>
+                      {app.date} {app.time} with Dr. {app.doctor_name} - {app.reason}
+                      <span className="status-badge">{app.status || "Scheduled"}</span>
                     </span>
                     <button
                       className="cancel-btn"
@@ -289,14 +300,19 @@ const PatientDashboard = () => {
               </label>
               <label>
                 Doctor:
-                <input
-                  type="text"
-                  name="doctor"
-                  placeholder="Doctor's Name"
-                  value={booking.doctor}
+                <select
+                  name="doctor_id"
+                  value={booking.doctor_id}
                   onChange={handleBookingChange}
                   required
-                />
+                >
+                  <option value="">Select Doctor</option>
+                  {doctors.map((doc) => (
+                    <option key={doc.id} value={doc.id}>
+                      {doc.name}
+                    </option>
+                  ))}
+                </select>
               </label>
               <label>
                 Reason:

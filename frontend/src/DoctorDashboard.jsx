@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { toast } from "react-toastify";
 
+
 const DoctorDashboard = () => {
   const [activeTab, setActiveTab] = useState("dashboard");
   const [appointments, setAppointments] = useState([]);
@@ -20,9 +21,9 @@ const DoctorDashboard = () => {
     const doctor = JSON.parse(localStorage.getItem("user"));
     if (doctor && doctor.id) {
       // Today's appointments
-      fetch(`http://localhost:5000/api/doctor/today?doctor_id=${doctor.id}`)
+      fetch(`http://localhost:5000/api/doctor/appointments?doctor_id=${doctor.id}`)
         .then((res) => res.json())
-        .then((data) => setAppointments(Array.isArray(data) ? data : []))
+        .then((data) => setAppointments(data))
         .catch(() => setAppointments([]));
 
       // Notifications
@@ -144,7 +145,7 @@ const DoctorDashboard = () => {
         )}
 
         {activeTab === "appointments" && (
-          <div>
+          <div className="upcoming-appointments-list">
             <h2>Upcoming Appointments</h2>
             {Array.isArray(upcomingAppointments) && upcomingAppointments.length === 0 ? (
               <p>No upcoming appointments.</p>
@@ -152,7 +153,37 @@ const DoctorDashboard = () => {
               <ul>
                 {upcomingAppointments.map((app) => (
                   <li key={app.id}>
-                    {app.date} {app.time} with {app.patient_name} - {app.reason}
+                    <span className="appointment-info">
+                      <span className="icon">📅</span>
+                      {app.date} {app.time} with {app.patient_name} - {app.reason}
+                      <span className="status-badge">{app.status || "Scheduled"}</span>
+                    </span>
+                    <div className="appointment-actions">
+                      {app.status !== "Completed" && (
+                        <button
+                          onClick={async () => {
+                            const res = await fetch(`http://localhost:5000/api/appointments/${app.id}/complete`, {
+                              method: "POST",
+                            });
+                            const data = await res.json();
+                            if (res.ok) {
+                              // Update UI
+                              setUpcomingAppointments((prev) =>
+                                prev.map((a) =>
+                                  a.id === app.id ? { ...a, status: "Completed" } : a
+                                )
+                              );
+                              toast.success("Appointment marked as completed.");
+                            } else {
+                              toast.error(data.error || "Could not mark as completed.");
+                            }
+                          }}
+                          className="book-btn"
+                        >
+                          Mark as Complete
+                        </button>
+                      )}
+                    </div>
                   </li>
                 ))}
               </ul>
